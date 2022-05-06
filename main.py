@@ -11,17 +11,15 @@ import json
 #print("Reponse status code:", response.status_code)
 
 #League of Builds API Key 06/05: RGAPI-e044cb80-7fb9-400a-ba21-9e451226a26f
-#Dev APi Key 06/05: RGAPI-296164da-ca7e-4703-9f51-f41ba423d61d
 
 
-#Dev Key
-#riotResponse = requests.get("https://nal.api.riotgames.com/lol/summoner/v4/summoners/by-name/Doublelift?api_key=RGAPI-296164da-ca7e-4703-9f51-f41ba423d61d")
-#LoB Key
-riotResponse = requests.get("https://nal.api.riotgames.com/lol/summoner/v4/summoners/by-name/Doublelift?api_key=RGAPI-e044cb80-7fb9-400a-ba21-9e451226a26f")
+
+riotResponse = requests.get("https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/Doublelift?api_key=RGAPI-e044cb80-7fb9-400a-ba21-9e451226a26f")
+
 #print(riotResponse)
 #print(type(riotResponse.json()))
 #print(riotResponse.json())
-#print(json.dumps(riotResponse.json()))
+print(json.dumps(riotResponse.json()))
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
