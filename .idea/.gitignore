@@ -1,2 +1,4 @@
 # Default ignored files
 /workspace.xml
+# Ignore API key file
+/RiotAPIKey.txt
