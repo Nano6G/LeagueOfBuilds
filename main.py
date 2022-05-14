@@ -29,16 +29,6 @@ champ_data = current_champ_list.get('data')
 
 '''
 for key, value in champ_data.items():
-    #print("\n\nKey : " + key)
-    #print("Value : ", value)
-    current_value = value.items()
-    for key, value in current_value:
-        if key == 'id':
-            print("Champ Name : ", value)
-'''
-
-'''
-for key, value in champ_data.items():
     current_value = value.items()
     for key, value in current_value:
         if key == 'id':
