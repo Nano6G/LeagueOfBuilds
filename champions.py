@@ -5,13 +5,16 @@ from PyQt5.QtCore import *
 
 
 class ChampionPage(QWidget):
-    def __init__(self, name):
+    def __init__(self, playerChampionName, enemyChampionName):
         super(ChampionPage, self).__init__()
-        self.name = name
-        self.setWindowTitle(name)
+        self.name = playerChampionName
+        self.enemyName = enemyChampionName
+        self.setWindowTitle(playerChampionName + " vs " + enemyChampionName)
         #self.resize(1280, 720)
+        self.show()
 
     def showChampPage(self):
+        print("showing matchup")
         self.show()
 
     def displayChampion(self):

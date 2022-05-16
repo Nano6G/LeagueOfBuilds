@@ -33,8 +33,11 @@ champ_data = current_champ_list.get('data')
 items = key.data_dragon.items(champions_version)
 for key, value in items.items():
     if type(value) is dict:
-        for key, value in value.items():
-            print(value)
+        if list(value.keys())[0] == '1001':
+            for key, value in value.items():
+                #print(list(value.values())[0])
+                pass
+
 
 '''
 for key, value in champ_data.items():
@@ -55,8 +58,10 @@ class MainWindow(QWidget):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setWindowTitle("League of Builds")
         #self.resize(1280, 720)
+        self.matchup = []
+        self.ChampionPage = 0
         self.displayChampions()
-        self.createChampionPages()
+        #self.createChampionPages()
 
     def displayChampions(self):
         #scroll = QScrollArea(self)
@@ -69,7 +74,7 @@ class MainWindow(QWidget):
         #scrollLayout = QGridLayout(scrollContent)
 
         grid = QGridLayout()
-        positions = [(i, j) for i in range(16) for j in range(10)]
+        positions = [(i, j) for i in range(18) for j in range(10)]
 
         for key, value in champ_data.items():
             current_value = value.items()
@@ -95,7 +100,8 @@ class MainWindow(QWidget):
             champ_id += 1
 
         for value in buttons.values():
-            value[1].clicked.connect(lambda checked, a=value[0]: self.switchChampionPage(a))
+            value[1].clicked.connect(lambda checked, a=value[0]: self.addChampToMatchUp(a))
+            #value[1].clicked.connect(lambda checked, a=value[0]: self.switchChampionPage(a))
 
         #scrollContent.setLayout(scrollLayout)
         #scroll.setWidget(scrollContent)
@@ -103,13 +109,25 @@ class MainWindow(QWidget):
         self.setLayout(grid)
         self.show()
 
-    def switchChampionPage(self, championName):
-        champIndex = list_of_champs.index(championName)
-        list_of_champ_objs[champIndex].showChampPage()
+    def addChampToMatchUp(self, champName):
+        self.matchup.append(champName)
+        if len(self.matchup) % 2 == 0:
+            firstChamp = self.matchup[len(self.matchup)-2]
+            secondChamp = self.matchup[len(self.matchup)-1]
+            #self.switchChampionPage(self.matchup[0], self.matchup[1])
+            self.switchChampionPage(firstChamp, secondChamp)
 
+    def switchChampionPage(self, playerChampionName, enemyChampionName):
+        #champIndex = list_of_champs.index(playerChampionName)
+        self.ChampionPage = champions.ChampionPage(playerChampionName, enemyChampionName)
+        #list_of_champ_objs[champIndex].showChampPage()
+
+
+'''
     def createChampionPages(self):
         for champion in list_of_champs:
             list_of_champ_objs.append(champions.ChampionPage(champion))
+'''
 
 
 def main():
