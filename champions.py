@@ -4,9 +4,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 
-class ChampionPage(QWidget):
+class MatchUpPage(QWidget):
     def __init__(self, playerChampionName, enemyChampionName):
-        super(ChampionPage, self).__init__()
+        super(MatchUpPage, self).__init__()
         self.name = playerChampionName
         self.enemyName = enemyChampionName
         self.setWindowTitle(playerChampionName + " vs " + enemyChampionName)
