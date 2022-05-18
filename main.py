@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 from riotwatcher import LolWatcher, ApiError
 
 import champions
-
+import collections
 import requests
 import json
 #import riotwatcher
@@ -33,13 +33,16 @@ champ_data = current_champ_list.get('data')
 #Items from API
 items = key.data_dragon.items(champions_version)
 item_dict = {}
+currentItemID = 0;
 currentItem = ''
 currentTags = []
 for key, value in items.items():
     if type(value) is dict:
         if list(value.keys())[0] == '1001':
             for key, value in value.items():
-                print(key)
+                if key > '3000':
+                    #print(key)
+                    currentItemID = key
                 #print(value)
                 if 'inStore' not in value.keys() and key > '3000':
                     for key, value in value.items():
@@ -50,10 +53,99 @@ for key, value in items.items():
                         if key == 'tags':
                             currentTags = value
                         if key == 'stats':
-                            item_dict[currentItem] = [currentTags, value]
+                            #item_dict[currentItem] = [currentTags, value]
+                            item_dict[currentItemID] = [currentItem, currentTags, value]
                 #print(list(value.values())[0])
                 #print(value)
+item_dict.pop('4403')
+item_dict.pop('3181')
+item_dict.pop('3044')
+item_dict.pop('3177')
+item_dict.pop('3184')
 print(item_dict)
+
+updatedItemDict = collections.defaultdict(list)
+for key, value in item_dict.items():
+    itemTags = value[1]
+    if 'Boots' in itemTags:
+        if 'AttackSpeed' in itemTags:
+            updatedItemDict['ADC'].append(value[0])
+        if 'Armor' in itemTags:
+            updatedItemDict['ADC'].append(value[0])
+            updatedItemDict['Tank'].append(value[0])
+            updatedItemDict['TankSupport'].append(value[0])
+            updatedItemDict['ADFighter'].append(value[0])
+            updatedItemDict['ADSupport'].append(value[0])
+            updatedItemDict['Mage'].append(value[0])
+            updatedItemDict['APSupport'].append(value[0])
+            updatedItemDict['APFighter'].append(value[0])
+            updatedItemDict['ADAssassin'].append(value[0])
+            updatedItemDict['APAssassin'].append(value[0])
+            updatedItemDict['APMarksman'].append(value[0])
+        if 'SpellBlock' in itemTags:
+            updatedItemDict['ADC'].append(value[0])
+            updatedItemDict['Tank'].append(value[0])
+            updatedItemDict['TankSupport'].append(value[0])
+            updatedItemDict['ADFighter'].append(value[0])
+            updatedItemDict['ADSupport'].append(value[0])
+            updatedItemDict['Mage'].append(value[0])
+            updatedItemDict['APSupport'].append(value[0])
+            updatedItemDict['APFighter'].append(value[0])
+            updatedItemDict['ADAssassin'].append(value[0])
+            updatedItemDict['APAssassin'].append(value[0])
+            updatedItemDict['APMarksman'].append(value[0])
+        if 'MagicPenetration' in itemTags:
+            updatedItemDict['Mage'].append(value[0])
+    if 'Armor' in itemTags:
+        updatedItemDict['AgainstAD'].append(value[0])
+    if 'SpellBlock' in itemTags:
+        updatedItemDict['AgainstAP'].append(value[0])
+    if 'ArmorPenetration' in itemTags:
+        updatedItemDict['AgainstTank'].append(value[0])
+    if 'Damage' in itemTags:
+        updatedItemDict['AgainstTank'].append(value[0])
+    if 'MagicPenetration' in itemTags:
+        updatedItemDict['AgainstTank'].append(value[0])
+    if 'Vision' in itemTags:
+        updatedItemDict['TankSupport'].append(value[0])
+        updatedItemDict['ADSupport'].append(value[0])
+        updatedItemDict['APSupport'].append(value[0])
+    elif 'GoldPer' in itemTags:
+        updatedItemDict['TankSupport'].append(value[0])
+        updatedItemDict['ADSupport'].append(value[0])
+        updatedItemDict['APSupport'].append(value[0])
+    if 'Health' in itemTags:
+        if 'Armor' and 'SpellBlock' in itemTags:
+            updatedItemDict['Tank'].append(value[0])
+            updatedItemDict['TankSupport'].append(value[0])
+        elif 'Armor' in itemTags:
+            #print(value[0], "is a health armour item")
+            updatedItemDict['Tank'].append(value[0])
+            updatedItemDict['TankSupport'].append(value[0])
+        elif 'SpellBlock' in itemTags:
+            updatedItemDict['Tank'].append(value[0])
+            updatedItemDict['TankSupport'].append(value[0])
+        elif 'Damage' in itemTags and 'CriticalStrike' not in itemTags and 'Vision' not in itemTags:
+            updatedItemDict['ADFighter'].append(value[0])
+            updatedItemDict['ADSupport'].append(value[0])
+    if 'Damage' in itemTags:
+        if 'AttackSpeed' and 'CriticalStrike' in itemTags:
+            updatedItemDict['ADC'].append(value[0])
+        elif 'ArmorPenetration' in itemTags:
+            updatedItemDict['ADAssassin'].append(value[0])
+        elif 'Armor' in itemTags:
+            updatedItemDict['ADSupport'].append(value[0])
+            updatedItemDict['ADFighter'].append(value[0])
+            updatedItemDict['ADC'].append(value[0])
+    if 'SpellDamage' in itemTags:
+        updatedItemDict['Mage'].append(value[0])
+        updatedItemDict['APSupport'].append(value[0])
+        updatedItemDict['APFighter'].append(value[0])
+
+print(updatedItemDict)
+#for key, value in updatedItemDict.items():
+#    print(key)
+#   print(value)
 
 '''
 for key, value in champ_data.items():
@@ -82,6 +174,7 @@ for key, value in champ_data.items():
             list_of_champs.append(currentChamp)
         if key == 'info':
             currentChampInfo = value
+            currentChampInfo.pop('difficulty')
         if key == 'tags':
             currentChampTags = value
             dict_of_champs[currentChamp] = [value, currentChampInfo]
@@ -170,7 +263,7 @@ class MainWindow(QWidget):
 
     def switchChampionPage(self, playerChampionName, enemyChampionName):
         #champIndex = list_of_champs.index(playerChampionName)
-        self.MatchupPage = champions.MatchUpPage(playerChampionName, enemyChampionName)
+        self.MatchupPage = champions.MatchUpPage(playerChampionName, enemyChampionName, dict_of_champs, updatedItemDict)
         #list_of_champ_objs[champIndex].showChampPage()
 
 
