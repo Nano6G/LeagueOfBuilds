@@ -3,15 +3,12 @@ from PyQt5.QtWidgets import QApplication, QLabel
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from riotwatcher import LolWatcher, ApiError
+from riotwatcher import LolWatcher
 
 import champions
 import collections
 import requests
-import json
-#import riotwatcher
 import os.path
-import time
 
 
 APIKeyFile = open("RiotAPIKey.txt", "r")
@@ -71,8 +68,7 @@ for key, value in items.items():
                         if key == 'maps':
                             if not value['11']:
                                 itemsToRemove.append(currentItemID)
-                #print(list(value.values())[0])
-                #print(value)
+
 for items in itemsToRemove:
     item_dict.pop(items)
 item_dict.pop('3076')
@@ -82,7 +78,6 @@ item_dict.pop('3191')
 item_dict.pop('4630')
 item_dict.pop('4632')
 item_dict.pop('4635')
-print(item_dict)
 
 updatedItemDict = collections.defaultdict(list)
 for key, value in item_dict.items():
@@ -168,22 +163,12 @@ for key, value in item_dict.items():
         updatedItemDict['APAssassin'].append((key, value[0]))
         updatedItemDict['APMarksman'].append((key, value[0]))
 
-print(updatedItemDict)
 
-'''
-for key, value in champ_data.items():
-    current_value = value.items()
-    for key, value in current_value:
-        if key == 'id':
-            #LIST OF CHAMPS
-            print("Champ Name:", value)
-'''
 dict_of_champs = {}
 currentChamp = ''
 currentChampInfo = {}
 
 list_of_champs = []
-#list_of_champ_objs = []
 listOfChampImages = []
 
 for key, value in champ_data.items():
@@ -202,8 +187,6 @@ for key, value in champ_data.items():
         if key == 'tags':
             currentChampTags = value
             dict_of_champs[currentChamp] = [value, currentChampInfo]
-
-#print(dict_of_champs)
 
 for keys in item_dict.keys():
     itemDirectory = "src/" + keys + ".png"
@@ -228,34 +211,11 @@ class MainWindow(QWidget):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setWindowTitle("League of Builds - Select the Champion you are Playing")
-        #self.resize(1280, 720)
         self.matchup = []
         self.ChampionPage = 0
         self.displayChampions()
-        #self.createChampionPages()
 
     def displayChampions(self):
-        #scroll = QScrollArea(self)
-        #layout = QVBoxLayout(self)
-        #layout = QGridLayout(self)
-        #layout.addWidget(scroll)
-        #scroll.setWidgetResizable(True)
-        #scrollContent = QWidget(scroll)
-        #scrollLayout = QVBoxLayout(scrollContent)
-        #scrollLayout = QGridLayout(scrollContent)
-
-        '''
-        for key, value in champ_data.items():
-            current_value = value.items()
-            for (key, value), position in zip(current_value, positions):
-                if key == 'id':
-                    list_of_champs.append(value)
-                    #button = QPushButton(value)
-                    #scrollLayout.addWidget(button)
-                    #button.clicked.connect(self.test)
-                    #grid.addWidget(button, *position)
-        '''
-
         list_of_champs.remove('Wukong')
         list_of_champs.insert(144, 'Wukong')
 
@@ -281,7 +241,7 @@ class MainWindow(QWidget):
 
         # Scroll Area Properties
         scroll = QScrollArea()
-        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        #scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         scroll.setWidgetResizable(True)
         scroll.setWidget(widget)
 
@@ -291,8 +251,7 @@ class MainWindow(QWidget):
         scroll_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(scroll_layout)
 
-
-        imgSize = 64
+        imgSize = 60
         self.row = 0
         self.col = 0
         champID = 0
@@ -317,13 +276,9 @@ class MainWindow(QWidget):
 
         for value in buttons.values():
             value[1].clicked.connect(lambda checked, a=value[0]: self.addChampToMatchUp(a))
-            #value[1].clicked.connect(lambda checked, a=value[0]: self.switchChampionPage(a))
 
-        #scrollContent.setLayout(scrollLayout)
-        #scroll.setWidget(scrollContent)
-        #self.setLayout(layout)
         self.setLayout(grid)
-        self.resize(1560, 900)
+        self.resize(1560, 1080)
         self.show()
 
     def addChampToMatchUp(self, champName):
@@ -338,36 +293,7 @@ class MainWindow(QWidget):
             self.setWindowTitle("League of Builds - Select the Champion you are Playing Against")
 
     def switchChampionPage(self, playerChampionName, enemyChampionName):
-        #champIndex = list_of_champs.index(playerChampionName)
         self.MatchupPage = champions.MatchUpPage(playerChampionName, enemyChampionName, dict_of_champs, updatedItemDict)
-        #list_of_champ_objs[champIndex].showChampPage()
-
-
-'''
-    def createChampionPages(self):
-        for champion in list_of_champs:
-            list_of_champ_objs.append(champions.ChampionPage(champion))
-'''
-
-'''
-class MainWindow(QMainWindow):
-
-    def __init__(self):
-        super(MainWindow, self).__init__()
-        with open('file.png', 'wb') as f:
-            f.write(requests.get("http://ddragon.leagueoflegends.com/cdn/12.9.1/img/item/2003.png").content)
-        self.title = "Image Viewer"
-        self.setWindowTitle(self.title)
-
-        label = QLabel(self)
-        pixmap = QPixmap('file.png')
-        label.setPixmap(pixmap)
-        self.setCentralWidget(label)
-        self.resize(pixmap.width(), pixmap.height())
-
-        self.show()
-'''
-
 
 
 def main():
