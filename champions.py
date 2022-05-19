@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QApplication, QLabel
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+import random
 
 
 class MatchUpPage(QWidget):
@@ -18,34 +19,130 @@ class MatchUpPage(QWidget):
 
         self.itemsForChamp = []
         self.itemsForEnemy = []
+        self.itemsForChampID = []
+        self.itemsForEnemyID = []
 
         self.findSelfItems(self.selfClass)
         self.findEnemyItems(self.enemyInfo)
 
-        self.itemsForChampSet = set(self.itemsForChamp)
-        self.itemsForEnemySet = set(self.itemsForEnemy)
-        self.finalItemsToShow = self.itemsForChampSet.intersection(self.itemsForEnemySet)
-        #if self.selfClass == 'Tank' and self.enemyInfo[2]:
-#            self.finalItemsToShow = self.itemsForChampSet
+        self.finalItemsToShowList = []
+        self.finalImagesToShowList = []
+        for item in self.itemsForChamp:
+            if item in self.itemsForEnemy:
+                self.finalItemsToShowList.append(item)
+        for ID in self.itemsForChampID:
+            if ID in self.itemsForEnemyID:
+                self.finalImagesToShowList.append(ID)
 
-        self.itemID = 0
-        print(len(self.finalItemsToShow))
-        while len(self.finalItemsToShow) < 6:
-            self.finalItemsToShow.add(self.itemsForChamp[self.itemID])
-            self.itemID += 1
-            #for item in self.itemsForChampSet:
-                #self.finalItemsToShow
+        #print(self.finalItemsToShowList)
+        #print(self.itemsForChamp)
+        #print(self.itemsForChampID)
 
-        print(self.itemsForChampSet)
-        print(self.itemsForEnemySet)
-        print(self.finalItemsToShow)
+        #self.grid = QGridLayout()
+        #Container widget
+        widget = QWidget()
+        #Layout of Container Widget
+        self.grid = QGridLayout(self)
+        self.grid.setContentsMargins(0, 0, 0, 0)
+        widget.setLayout(self.grid)
+
+        #Scroll Area Properties
+        scroll = QScrollArea()
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(widget)
+
+        #Scroll Area Layer add
+        scroll_layout = QGridLayout(self)
+        scroll_layout.addWidget(scroll)
+        scroll_layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(scroll_layout)
+
+        #self.grid = QGridLayout(self)
+        #self.setLayout(self.grid)
+
+        #self.scrollArea = QScrollArea()
+        #self.scrollArea.setWidgetResizable(True)
+        #self.scrollArea.setWidget(self)
+
+        #self.scrollLayout = QVBoxLayout(self)
+        #self.scrollLayout.addWidget(self.scrollArea)
+        #self.setLayout(self.scrollLayout)
+
+        imgSize = 60
+
+        self.champLabel = QLabel()
+        self.champLabel.setText("Recommended items when playing as " + self.name + ":")
+        self.grid.addWidget(self.champLabel, 0, 0, 1, 2)
+
+        self.enemyLabel = QLabel()
+        self.enemyLabel.setText("Recommended items when playing against " + self.enemyName + ":")
+        self.grid.addWidget(self.enemyLabel, 0, 2, 1, 2)
+
+        self.row = 1
+        self.col = 0
+        for itemID in self.itemsForChampID:
+            self.itemImage = QLabel()
+            self.imageDirectory = "src/" + itemID + ".png"
+            self.image = QPixmap(self.imageDirectory)
+            self.scaledImage = self.image.scaled(imgSize, imgSize)
+            self.itemImage.setPixmap(self.scaledImage)
+            self.grid.addWidget(self.itemImage, self.row, self.col)
+            self.row += 1
 
 
-        #self.resize(1280, 720)
-        self.show()
+        self.row = 1
+        self.col = 1
+        for itemName in self.itemsForChamp:
+            self.item = QLabel()
+            self.item.setText(itemName)
+            self.grid.addWidget(self.item, self.row, self.col)
+            self.row += 1
 
-    def showChampPage(self):
-        print("showing matchup")
+        self.row = 1
+        self.col = 2
+        for itemID in self.itemsForEnemyID:
+            self.itemImage = QLabel()
+            self.imageDirectory = "src/" + itemID + ".png"
+            self.image = QPixmap(self.imageDirectory)
+            self.scaledImage = self.image.scaled(imgSize, imgSize)
+            self.itemImage.setPixmap(self.scaledImage)
+            self.grid.addWidget(self.itemImage, self.row, self.col)
+            self.row += 1
+
+        self.row = 1
+        self.col = 3
+        for itemName in self.itemsForEnemy:
+            self.item = QLabel()
+            self.item.setText(itemName)
+            self.grid.addWidget(self.item, self.row, self.col)
+            self.row += 1
+
+        self.finalLabel = QLabel()
+        if len(self.finalItemsToShowList) != 0:
+            self.finalLabel.setText("Best items when playing " + self.name + " vs " + self.enemyName + ":")
+            self.grid.addWidget(self.finalLabel, 0, 4, 1, 2)
+
+        self.row = 1
+        self.col = 4
+        for itemID in self.finalImagesToShowList:
+            self.itemImage = QLabel()
+            self.imageDirectory = "src/" + itemID + ".png"
+            self.image = QPixmap(self.imageDirectory)
+            self.scaledImage = self.image.scaled(imgSize, imgSize)
+            self.itemImage.setPixmap(self.scaledImage)
+            self.grid.addWidget(self.itemImage, self.row, self.col)
+            self.row += 1
+
+        self.row = 1
+        self.col = 5
+        for itemName in self.finalItemsToShowList:
+            self.item = QLabel()
+            self.item.setText(itemName)
+            self.grid.addWidget(self.item, self.row, self.col)
+            self.row += 1
+
+        self.resize(1080, 1080)
         self.show()
 
     def findSelfClass(self):
@@ -56,58 +153,33 @@ class MatchUpPage(QWidget):
 
         if 'Support' in champ_tags:
             if champ_stats['defense'] > 6:
-                #print("Tank support")
-                #self.selfClass = 'TankSupport'
                 return 'TankSupport'
             elif champ_stats['magic'] > champ_stats['attack']:
-                #print("AP support")
-                #self.selfClass = 'APSupport'
                 return 'APSupport'
             else:
-                #print("AD support")
-                #self.selfClass = 'ADSupport'
                 return 'ADSupport'
 
         elif champ_tags[0] == 'Assassin':
             if champ_stats['attack'] > champ_stats['magic']:
-                #print("AD assassin")
-                #self.selfClass = 'ADAssassin'
                 return 'ADAssassin'
             else:
-                #print("AP assassin")
-                #self.selfClass = 'APAssassin'
                 return 'APAssassin'
         elif champ_tags[0] == 'Marksman':
             if champ_stats['attack'] > champ_stats['magic']:
-                #print("ADC")
-                #self.selfClass = 'ADC'
                 return 'ADC'
             else:
-                #print("AP marksman")
-                #self.selfClass = 'APMarksman'
                 return 'APMarksman'
         elif champ_tags[0] == 'Mage':
-            #print("Mage")
-            #self.selfClass = 'Mage'
             return 'Mage'
         elif champ_tags[0] == 'Tank':
-            #print("Tank")
-            #self.selfClass = 'Tank'
             return 'Tank'
         elif champ_tags[0] == 'Fighter':
             if champ_stats['defense'] > 6:
-                #print("Tank")
-                #self.selfClass = 'Tank'
                 return 'Tank'
             elif champ_stats['attack'] > champ_stats['magic']:
-                #print("AD fighter")
-                #self.selfClass = 'ADFighter'
                 return 'ADFighter'
             else:
-                #print("AP fighter")
-                #self.selfClass = 'APFighter'
                 return 'APFighter'
-        #print(self.selfClass)
 
     def findEnemyClass(self):
         enemy_tags = self.champs[self.enemyName][0]
@@ -129,28 +201,36 @@ class MatchUpPage(QWidget):
     def findSelfItems(self, champClass):
         for key, value in self.items.items():
             if key == self.selfClass:
-                self.itemsForChamp = value
-                #for item in value:
-                    #print(item)
-                    #pass
+                #self.itemsForChamp = value
+                for item in value:
+                    self.itemsForChampID.append(item[0])
+                    self.itemsForChamp.append(item[1])
         #print(self.itemsForChamp)
 
     def findEnemyItems(self, champInfo):
         for key, value in self.items.items():
-            itemTags = value[1]
             if key == 'AgainstAD':
                 #Find items good against high AD
                 if champInfo[0]:
-                    self.itemsForEnemy = value
-                    #print(value)
+                    #self.itemsForEnemy = value
+                    #self.itemsForEnemy.append(value)
+                    for tuple in value:
+                        self.itemsForEnemyID.append(tuple[0])
+                        self.itemsForEnemy.append(tuple[1])
             if key == 'AgainstAP':
                 #Find items good against high AP
                 if champInfo[1]:
-                    self.itemsForEnemy = value
-                    #print(value)
+                    #self.itemsForEnemy = value
+                    #self.itemsForEnemy.append(value)
+                    for tuple in value:
+                        self.itemsForEnemyID.append(tuple[0])
+                        self.itemsForEnemy.append(tuple[1])
             if key == 'AgainstTank':
                 # Find items good against tanks
                 if champInfo[2]:
-                    self.itemsForEnemy = value
-                    #print(value)
+                    #self.itemsForEnemy = value
+                    #self.itemsForEnemy.append(value)
+                    for tuple in value:
+                        self.itemsForEnemyID.append(tuple[0])
+                        self.itemsForEnemy.append(tuple[1])
         #print(self.itemsForEnemy)
