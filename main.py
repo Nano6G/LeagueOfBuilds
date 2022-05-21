@@ -17,11 +17,6 @@ RiotAPIKey = APIKeyFile.read()
 key = LolWatcher('' + RiotAPIKey)
 region = 'euw1'
 
-#me = key.summoner.by_name(region, 'Dump Gubbler')
-#print(me)
-#my_ranked_stats = key.league.by_summoner(region, me['id'])
-#print(my_ranked_stats)
-
 versions = key.data_dragon.versions_for_region(region)
 champions_version = versions['n']['champion']
 
@@ -32,7 +27,7 @@ champ_data = current_champ_list.get('data')
 #Items from API
 items = key.data_dragon.items(champions_version)
 item_dict = {}
-currentItemID = 0;
+currentItemID = 0
 currentItem = ''
 currentTags = []
 itemsToRemove = []

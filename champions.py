@@ -58,25 +58,16 @@ class MatchUpPage(QWidget):
         scroll_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(scroll_layout)
 
-        #self.grid = QGridLayout(self)
-        #self.setLayout(self.grid)
-
-        #self.scrollArea = QScrollArea()
-        #self.scrollArea.setWidgetResizable(True)
-        #self.scrollArea.setWidget(self)
-
-        #self.scrollLayout = QVBoxLayout(self)
-        #self.scrollLayout.addWidget(self.scrollArea)
-        #self.setLayout(self.scrollLayout)
-
         imgSize = 60
 
         self.champLabel = QLabel()
-        self.champLabel.setText("Recommended items when playing as " + self.name + ":")
+        self.champLabel.setFont(QFont('Arial', 14))
+        self.champLabel.setText("Recommended items as " + self.name + ":")
         self.grid.addWidget(self.champLabel, 0, 0, 1, 2)
 
         self.enemyLabel = QLabel()
-        self.enemyLabel.setText("Recommended items when playing against " + self.enemyName + ":")
+        self.enemyLabel.setFont(QFont('Arial', 14))
+        self.enemyLabel.setText("Recommended items against " + self.enemyName + ":")
         self.grid.addWidget(self.enemyLabel, 0, 2, 1, 2)
 
         self.row = 1
@@ -95,6 +86,7 @@ class MatchUpPage(QWidget):
         self.col = 1
         for itemName in self.itemsForChamp:
             self.item = QLabel()
+            self.item.setFont(QFont('Arial', 10))
             self.item.setText(itemName)
             self.grid.addWidget(self.item, self.row, self.col)
             self.row += 1
@@ -114,11 +106,13 @@ class MatchUpPage(QWidget):
         self.col = 3
         for itemName in self.itemsForEnemy:
             self.item = QLabel()
+            self.item.setFont(QFont('Arial', 10))
             self.item.setText(itemName)
             self.grid.addWidget(self.item, self.row, self.col)
             self.row += 1
 
         self.finalLabel = QLabel()
+        self.finalLabel.setFont(QFont('Arial', 14))
         if len(self.finalItemsToShowList) != 0:
             self.finalLabel.setText("Best items when playing " + self.name + " vs " + self.enemyName + ":")
             self.grid.addWidget(self.finalLabel, 0, 4, 1, 2)
@@ -138,6 +132,7 @@ class MatchUpPage(QWidget):
         self.col = 5
         for itemName in self.finalItemsToShowList:
             self.item = QLabel()
+            self.item.setFont(QFont('Arial', 10))
             self.item.setText(itemName)
             self.grid.addWidget(self.item, self.row, self.col)
             self.row += 1
