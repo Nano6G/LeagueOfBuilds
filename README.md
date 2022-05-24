@@ -6,4 +6,4 @@ LeagueOfBuilds.exe is the executable for the application and includes any librar
 main.py and champions.py are the source code of the program
 src includes any images used in the interface of the software
 
-!!The program requires an Riot Games API key stored in "RiotAPIKey.txt' to function!!
+!!The program requires an Riot Games API key stored in 'RiotAPIKey.txt' to function!!
