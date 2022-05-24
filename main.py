@@ -17,12 +17,12 @@ RiotAPIKey = APIKeyFile.read()
 key = LolWatcher('' + RiotAPIKey)
 region = 'euw1'
 
+
 versions = key.data_dragon.versions_for_region(region)
 champions_version = versions['n']['champion']
+currentChampList = key.data_dragon.champions(champions_version)
+champ_data = currentChampList.get('data')
 
-current_champ_list = key.data_dragon.champions(champions_version)
-#Gets dictionary of champions
-champ_data = current_champ_list.get('data')
 
 #Items from API
 items = key.data_dragon.items(champions_version)

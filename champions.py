@@ -81,7 +81,6 @@ class MatchUpPage(QWidget):
             self.grid.addWidget(self.itemImage, self.row, self.col)
             self.row += 1
 
-
         self.row = 1
         self.col = 1
         for itemName in self.itemsForChamp:
