@@ -186,7 +186,7 @@ for key, value in champ_data.items():
 for keys in item_dict.keys():
     itemDirectory = "src/" + keys + ".png"
     if os.path.isfile(itemDirectory) == False:
-        itemImage = requests.get("http://ddragon.leagueoflegends.com/cdn/12.9.1/img/item/" + keys + ".png").content
+        itemImage = requests.get("http://ddragon.leagueoflegends.com/cdn/" + champions_version + "/img/item/" + keys + ".png").content
         with open(itemDirectory, 'wb') as f:
             f.write(itemImage)
 
@@ -195,9 +195,9 @@ for champ in list_of_champs:
     champDirectory = "src/" + champ + ".png"
     if os.path.isfile(champDirectory) == False:
         if champ == 'Wukong':
-            champImage = requests.get("http://ddragon.leagueoflegends.com/cdn/12.9.1/img/champion/MonkeyKing.png").content
+            champImage = requests.get("http://ddragon.leagueoflegends.com/cdn/" + champions_version + "/img/champion/MonkeyKing.png").content
         else:
-            champImage = requests.get("http://ddragon.leagueoflegends.com/cdn/12.9.1/img/champion/" + champ + ".png").content
+            champImage = requests.get("http://ddragon.leagueoflegends.com/cdn/" + champions_version + "/img/champion/" + champ + ".png").content
         with open(champDirectory, 'wb') as f:
             f.write(champImage)
 

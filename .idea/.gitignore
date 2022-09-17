@@ -2,3 +2,5 @@
 /workspace.xml
 # Ignore API key file
 /RiotAPIKey.txt
+# Ignore Champion and Item Images
+/src/*.png
